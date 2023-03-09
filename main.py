@@ -13,11 +13,11 @@ pd.set_option('display.expand_frame_repr', False)
 
 monitoring_code = [
     str(i) for i in [
+        113569,
         113578,
         127049,
         113596,
         128085,
-        113595,
         128074,
         128108,
         127051,
@@ -35,7 +35,7 @@ monitoring_code = [
 ]
 update_period = 10
 max_display_num = 4  # No more than 4, otherwise they will only display 4
-threshold = 0.2  # Percent
+threshold = 1.0  # Percent
 
 toaster = ToastNotifier()
 
@@ -85,7 +85,7 @@ def threshold_monitor():
             [
                 '{0:4s}  {1:8.3f}  {2:7.3f}%'.format(name, price, percent)
                 for (name, price, percent) in zip(eb_name, eb_price, eb_percentage)
-                if percent > threshold
+                if abs(percent) > threshold
             ]
         )
 
