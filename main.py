@@ -35,14 +35,18 @@ monitoring_code = [
 ]
 update_period = 10
 max_display_num = 4  # No more than 4, otherwise they will only display 4
-threshold = 0.5  # Percent
+threshold = 1.5  # Percent
 
 toaster = ToastNotifier()
 
 
 def continuous_monitor():
     while True:
-        current_market_info = GetMarketInfo(StockType.EXCHANGE_BOND).market_info()
+        try:
+            current_market_info = GetMarketInfo(StockType.EXCHANGE_BOND).market_info()
+        except Exception as e:
+            print(e)
+            continue
 
         selected_stock_list = current_market_info[current_market_info['code'].isin(monitoring_code)]
         sorted_selected_list = selected_stock_list.sort_values('changepercent', ascending=False)[0:max_display_num]
@@ -72,7 +76,11 @@ def continuous_monitor():
 
 def threshold_monitor():
     while True:
-        current_market_info = GetMarketInfo(StockType.EXCHANGE_BOND).market_info()
+        try:
+            current_market_info = GetMarketInfo(StockType.EXCHANGE_BOND).market_info()
+        except Exception as e:
+            print(e)
+            continue
 
         selected_stock_list = current_market_info[current_market_info['code'].isin(monitoring_code)]
 
