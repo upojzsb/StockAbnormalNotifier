@@ -35,7 +35,7 @@ monitoring_code = [
 ]
 update_period = 10
 max_display_num = 4  # No more than 4, otherwise they will only display 4
-threshold = 1.0  # Percent
+threshold = 0.5  # Percent
 
 toaster = ToastNotifier()
 
@@ -75,7 +75,9 @@ def threshold_monitor():
         current_market_info = GetMarketInfo(StockType.EXCHANGE_BOND).market_info()
 
         selected_stock_list = current_market_info[current_market_info['code'].isin(monitoring_code)]
-        sorted_selected_list = selected_stock_list.sort_values('changepercent', ascending=False)[0:max_display_num]
+
+        selected_stock_list.reindex(selected_stock_list['changepercent'].astype('float').abs().sort_values().index)
+        sorted_selected_list = selected_stock_list
 
         eb_name = sorted_selected_list['name'].to_list()
         eb_price = list(map(float, sorted_selected_list['trade'].to_list()))
